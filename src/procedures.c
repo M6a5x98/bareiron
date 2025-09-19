@@ -501,6 +501,10 @@ void failBlockChange (short x, uint8_t y, short z, uint8_t block) {
 
 uint8_t makeBlockChange (short x, uint8_t y, short z, uint8_t block) {
 
+  // Handle snow broken on top of snowy grass blocks
+  if (getBlockAt(x, y, z) == B_snow && getBlockAt(x, y - 1, z) == B_snowy_grass_block)
+    makeBlockChange(x, y - 1, z, B_grass_block);
+  
   // Transmit block update to all in-game clients
   for (int i = 0; i < MAX_PLAYERS; i ++) {
     if (player_data[i].client_fd == -1) continue;
